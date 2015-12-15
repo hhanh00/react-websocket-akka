@@ -27,11 +27,10 @@ class Exporter(port: Int) extends Actor {
   val in = Sink.ignore
   val out = Source.actorRef[TextMessage](1, OverflowStrategy.dropNew).mapMaterializedValue { a => self ! a }
 
+  var subs = List.empty[ActorRef]
   def receive = {
-    case publisher: ActorRef =>
-      context.become {
-        case m: TextMessage => publisher ! m
-      }
+    case sub: ActorRef => subs ::= sub
+    case m: TextMessage => subs.foreach { _ ! m }
   }
 
   val route = path("time") {

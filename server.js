@@ -12,7 +12,7 @@ const app = express();
 const compiler = webpack(config);
 
 const proxy = httpProxy.createProxyServer({
-  target: 'http://localhost:4101',
+  target: 'http://localhost:3001',
   ws: true
 });
 
